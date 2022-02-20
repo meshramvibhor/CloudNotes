@@ -64,7 +64,7 @@ router.post(
 // Update an existing note using: PUt "api/note/updatenote/:d" -  log in required
 router.put("/updatenote/:id", fetchuser, async (req, res) => {
   try {
-    const { title, description, tag } = req.body;
+    const { title, description } = req.body;
 
     //create a new note object
     const newNote = {};
@@ -74,14 +74,12 @@ router.put("/updatenote/:id", fetchuser, async (req, res) => {
     if (description) {
       newNote.description = description;
     }
-    if (tag) {
-      newNote.tag = tag;
-    }
+  
 
     // find the specific note to be updated with id comes in api
     let note = await Note.findById(req.params.id);
     if (!note) {
-      return res.status(404).send("Fot Found");
+      return res.status(404).send("Not Found");
     }
 
     //check if user id of note and user id of logged in person is same or not
