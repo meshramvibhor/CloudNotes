@@ -19,12 +19,13 @@ const NoteState = (props) => {
       },
     });
     const json = await response.json();
-    console.log(json);
+    // console.log(json);
     setNotes(json);
   };
 
   //Adding a note
   const addNote = async (title, description) => {
+    console.log(title)
     //API call
     const response = await fetch(`${host}/api/note/createnote`, {
       method: "POST",
@@ -37,7 +38,7 @@ const NoteState = (props) => {
     });
 
     //client side
-    console.log("Adding new note");
+    // console.log("Adding new note");
     const note = {
       _id: "61dea096b6c209882d9917c32",
       user: "61de7b430460d6979743b723",
@@ -51,6 +52,7 @@ const NoteState = (props) => {
 
   //Deleting a note
   const deleteNote = async (id) => {
+    console.log(id)
     //API call
     const response = await fetch(`${host}/api/note/deletenote/${id}`, {
       method: "DELETE",
@@ -62,7 +64,7 @@ const NoteState = (props) => {
     });
 
     const json = await response.json();
-    console.log(json);
+    // console.log(json);
 
     console.log("deleting note", id);
     const newNotes = notes.filter((note) => note._id !== id);
@@ -73,23 +75,28 @@ const NoteState = (props) => {
   const editNote = async (id, title, description) => {
     //API call
     const response = await fetch(`${host}/api/note/updatenote/${id}`, {
-      method: "POST",
+      method: "PUT",
       headers: {
         "Content-Type": "application/json",
         "jwt-token":
-          "eyJhbGciOiJIUzINiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjFkZTdiNDMwNDYwZDY5Nzk3NDNiNzIzIn0sImlhdCI6MTY0MTk3MDUyMn0.QsnW4Bh0TE6PR1glniQI0rc0nk0LhNxbrj3qTOdcLbA",
+          "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjFkZTdiNDMwNDYwZDY5Nzk3NDNiNzIzIn0sImlhdCI6MTY0MTk3MDUyMn0.QsnW4Bh0TE6PR1glniQI0rc0nk0LhNxbrj3qTOdcLbA",
       },
       body: JSON.stringify({ title, description }),
     });
 
+    let newNote = JSON.parse(JSON.stringify(notes))
+
     //client side editing
-    for (let index = 0; index < notes.length; index++) {
-      const element = notes[index];
+    for (let index = 0; index < newNote.length; index++) {
+      const element = newNote[index];
       if (element._id === id) {
-        element.title = title;
-        element.description = description;
+        newNote[index].title = title;
+        newNote[index].description = description;
+        break;
       }
     }
+
+    setNotes(newNote)
   };
 
   return (
