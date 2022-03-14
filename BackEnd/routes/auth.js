@@ -23,8 +23,9 @@ router.post(
   async (req, res) => {
     // checking errors while taking userinputs
     const errors = validationResult(req);
+    let success = false;
     if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() });
+      return res.status(400).json({success: success, errors: errors.array() });
     }
 
     try {
@@ -33,7 +34,7 @@ router.post(
       if (user) {
         return res
           .status(400)
-          .json({ error: "Already a user with this email." });
+          .json({success:success, error: "Already a user with this email." });
       }
 
       //creating salt for password protection
@@ -58,7 +59,8 @@ router.post(
       //signing data with jwt for security 
       const jwtData = jwt.sign(data, JWT_SECRET);
       //sending response as jwt token
-      res.json({ jwtData });
+      success = true;
+      res.json({success:success, jwtData });
 
     } catch (error) {
       console.error(error.msg);
@@ -80,20 +82,21 @@ router.post(
   async (req, res) => {
     // checking errors while taking userinputs just return the errors
     const errors = validationResult(req);
+    let success = false;
     if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() });
+      return res.status(400).json({ success:success, errors: errors.array() });
     }
 
     const { email, password } = req.body;
     try {
       let user = await User.findOne({ email });
       if (!user) {
-        return res.status(400).json({ error: "please give valid credentials" });
+        return res.status(400).json({ success:fsuccess, error: "please give valid credentials" });
       }
 
       const pasCompare = await bcrypt.compare(password, user.password);
       if (!pasCompare) {
-        return res.status(400).json({ error: "please give valid credentials" });
+        return res.status(400).json({ sucess:success, error: "please give valid credentials" });
       }
 
       const data = {
@@ -103,7 +106,8 @@ router.post(
       };
 
       const jwtData = jwt.sign(data, JWT_SECRET);
-      res.json({ jwtData });
+      success = true;
+      res.json({ success:success, jwtData });
     } catch (error) {
       console.error(error.msg);
       res.status(500).send("Internal error occured");
