@@ -38,6 +38,7 @@ export const NavBar = () => {
                            <Link type="button" to="/login" class="btn btn-primary mx-2">LogIn</Link>
                            <Link type="button" to="/signup" class="btn btn-primary mx-2">SignUp</Link>
                            </form>: <button type="button" onClick={handleLogout} class="btn btn-primary mx-2">LogOut</button> }
+
                     </div>
                     
                 </div>
